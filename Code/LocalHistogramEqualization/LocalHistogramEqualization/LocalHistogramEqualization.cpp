@@ -62,7 +62,7 @@ Mat applyCLAHE(const Mat& src, double clipLimit, Size tileGridSize) {
     return dst;
 }
 
-// Hàm tính histogram của một tile
+// Histogram Equalization a tile
 void calcHistogram(const Mat& tile, vector<int>& hist) {
     for (int i = 0; i < tile.rows; ++i) {
         for (int j = 0; j < tile.cols; ++j) {
@@ -72,6 +72,7 @@ void calcHistogram(const Mat& tile, vector<int>& hist) {
     }
 }
 
+// Clip Histogram
 void clipHistogram(vector<int>& hist, int clipLimit)
 {
     int totalPixels = 0;
@@ -93,18 +94,16 @@ void clipHistogram(vector<int>& hist, int clipLimit)
             hist[i] = maxAllowed;
         }
     }
-    // Phân phối lại các giá trị dư thừa vào các giá trị khác trong histogram
-    int idx = 0;
-    while (excess > 0) 
-    {
-        hist[idx]++;
-        excess--;
-        idx++;
-        if (idx == 256) idx = 0;
-    }
-
+    // Redistribute excess
+    int bonus = excess / 256;
+    int remain = excess % 256;
+    for (int k = 0; k < 256; ++k)
+        hist[k] += bonus;
+    for (int k = 0; k < remain; ++k)
+        hist[k]++;
 }
 
+// Equalization Histogram a tile
 void equalizeHistogram(vector<int>& hist, Mat& tile)
 {
     int totalPixels = tile.rows * tile.cols;
@@ -129,17 +128,21 @@ void equalizeHistogram(vector<int>& hist, Mat& tile)
         }
     }
 }
-void ManualCLAHE(const Mat& img, Mat& result, int tileSize, int clipLimit)
+
+// Manual CLAHE not using Bilinear
+Mat ManualCLAHE(const Mat& img, int tileSize, int clipLimit)
 {
     int rows = img.rows;
     int cols = img.cols;
-    result = img.clone();
+    Mat result = img.clone();
+    // Tránh chỉnh sửa img qua img(roi)
+    Mat temp = img.clone();
     for (int i = 0; i < rows; i += tileSize)
     {
         for (int j = 0; j < cols; j += tileSize)
         {
             Rect roi(j, i, min(tileSize, cols - j), min(tileSize, rows - i));
-            Mat tile = img(roi);
+            Mat tile = temp(roi);
 
             // Tính toán histogram cho tile
             vector<int> hist(256, 0);
@@ -154,11 +157,14 @@ void ManualCLAHE(const Mat& img, Mat& result, int tileSize, int clipLimit)
             tile.copyTo(result(roi));
         }
     }
+
+    return result;
 }
 
-void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLimit)
+// Manual CLAHE using Bilinear
+Mat ManualCLAHE_Bilinear(const Mat& src, int tileSize, double clipLimit)
 {
-    dst = src.clone();
+    Mat dst = src.clone();
     int rows = src.rows;
     int cols = src.cols;
     int nTilesY = (rows + tileSize - 1) / tileSize;
@@ -175,6 +181,7 @@ void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLim
             int x0 = j * tileSize;
             int h = min(tileSize, rows - y0);
             int w = min(tileSize, cols - x0);
+            int totalPixels = w * h;
             Rect roi(x0, y0, w, h);
             Mat tile = src(roi);
 
@@ -182,27 +189,8 @@ void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLim
             vector<int> hist(256, 0);
             calcHistogram(tile, hist);
 
-            int totalPixels = w * h;
-            int clipLimitVal = static_cast<int>(clipLimit * totalPixels / 256.0f);
-            int excess = 0;
-
-            // Clip histogram
-            for (int k = 0; k < 256; ++k)
-            {
-                if (hist[k] > clipLimitVal)
-                {
-                    excess += hist[k] - clipLimitVal;
-                    hist[k] = clipLimitVal;
-                }
-            }
-
-            // Redistribute excess
-            int bonus = excess / 256;
-            int remain = excess % 256;
-            for (int k = 0; k < 256; ++k)
-                hist[k] += bonus;
-            for (int k = 0; k < remain; ++k)
-                hist[k]++;
+            // Clip Histogram
+            clipHistogram(hist, clipLimit);
 
             // CDF
             vector<int> cdf(256, 0);
@@ -258,6 +246,8 @@ void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLim
             dst.at<uchar>(y, x) = static_cast<uchar>(round(interpolated));
         }
     }
+
+    return dst;
 }
 
 
@@ -271,29 +261,27 @@ int main() {
     }
     imshow("Original Image", img);
 
-    //// Histogram Equalization using OpenCV library
-    //Mat eqlHist = img.clone();
-    //equalizeHist(img, eqlHist);
-    //imshow("HE OpenCV", eqlHist);
+    // Histogram Equalization using OpenCV library
+    Mat eqlHist = img.clone();
+    equalizeHist(img, eqlHist);
+    imshow("HE OpenCV", eqlHist);
 
-    //// Basic Local Histogram Equalization
-    //Mat blockEqualized = localHistEqualBlock(img, 60);
-    //imshow("Block Equalization", blockEqualized);
+    // Basic Local Histogram Equalization
+    Mat blockEqualized = localHistEqualBlock(img, 60);
+    imshow("Block Equalization", blockEqualized);
 
-    //// Local Histogram Equalization using sliding window
-    //Mat slidingEqualized = localHistEqualSliding(img, 50);
-    //imshow("Sliding Window Equalization", slidingEqualized);
+    // Local Histogram Equalization using sliding window
+    Mat slidingEqualized = localHistEqualSliding(img, 15);
+    imshow("Sliding Window Equalization", slidingEqualized);
 
-    // CLAHE
-    //Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));
-    //imshow("CLAHE", claheImg);
+    //CLAHE
+    Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));
+    imshow("CLAHE", claheImg);
 
-    //Mat CLAHEimg = img.clone();
-    //ManualCLAHE(img, CLAHEimg, 32, 4.0);
-    //imshow("Manual CLAHE", CLAHEimg);
+    Mat CLAHEimg = ManualCLAHE(img, 32, 4.0);
+    imshow("Manual CLAHE", CLAHEimg);
 
-    Mat CLAHEImgBil = img.clone();
-    ManualCLAHE_Bilinear(img, CLAHEImgBil, 32, 3.0f);
+    Mat CLAHEImgBil = ManualCLAHE_Bilinear(img, 32, 3.0f);
     imshow("Manual CLAHE Bilinear", CLAHEImgBil);
 
     waitKey(0);
