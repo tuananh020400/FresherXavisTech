@@ -4,14 +4,20 @@
 using namespace cv;
 using namespace std;
 
-// Step ①: Histogram Equalization cho từng block MxN
-Mat localHistEqualBlock(const Mat& src, int blockWidth, int blockHeight) {
+// Basic Local Histogram Equalization
+Mat localHistEqualBlock(const Mat& src, int blockSize) {
     Mat dst = src.clone();
-    for (int y = 0; y < src.rows; y += blockHeight) {
-        for (int x = 0; x < src.cols; x += blockWidth) {
+    Mat padded;
+    int border = blockSize / 2;
+    copyMakeBorder(src, padded, border, border, border, border, BORDER_REFLECT);
+
+    for (int y = 0; y < src.rows; y += blockSize)
+    {
+        for (int x = 0; x < src.cols; x += blockSize)
+        {
             Rect roi(x, y,
-                min(blockWidth, src.cols - x),
-                min(blockHeight, src.rows - y));
+                min(blockSize, src.cols - x),
+                min(blockSize, src.rows - y));
             Mat block = src(roi);
             Mat equalizedBlock;
             equalizeHist(block, equalizedBlock);
@@ -21,21 +27,20 @@ Mat localHistEqualBlock(const Mat& src, int blockWidth, int blockHeight) {
     return dst;
 }
 
-// Step ②: Histogram Equalization cho mỗi pixel trung tâm của cửa sổ MxN
-Mat localHistEqualSliding(const Mat& src, int winWidth, int winHeight, int centerSize = 1) {
+// Local Histogram Equalization using sliding window
+Mat localHistEqualSliding(const Mat& src, int WindowSize) {
     Mat dst = src.clone();
-    int halfW = winWidth / 2;
-    int halfH = winHeight / 2;
-
     Mat padded;
-    copyMakeBorder(src, padded, halfH, halfH, halfW, halfW, BORDER_REFLECT);
+    int padding = WindowSize / 2;
+
+    copyMakeBorder(src, padded, padding, padding, padding, padding, BORDER_REFLECT);
 
     for (int y = 0; y < src.rows; ++y)
     {
         for (int x = 0; x < src.cols; ++x)
         {
             // Cửa sổ xung quanh điểm (x,y)
-            Rect roi(x, y, winWidth, winHeight);
+            Rect roi(x, y, WindowSize, WindowSize);
             Mat window = padded(roi);
 
             // Tính histogram equalization cho vùng cửa sổ
@@ -43,13 +48,13 @@ Mat localHistEqualSliding(const Mat& src, int winWidth, int winHeight, int cente
             equalizeHist(window, eqWindow);
 
             // Cập nhật lại pixel tại tâm
-            dst.at<uchar>(y, x) = eqWindow.at<uchar>(halfH, halfW);
+            dst.at<uchar>(y, x) = eqWindow.at<uchar>(padding,padding);
         }
     }
     return dst;
 }
 
-// Step ③: CLAHE trong OpenCV
+// CLAHE
 Mat applyCLAHE(const Mat& src, double clipLimit, Size tileGridSize) {
     Ptr<CLAHE> clahe = createCLAHE(clipLimit, tileGridSize);
     Mat dst;
@@ -175,9 +180,7 @@ void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLim
 
             // Histogram
             vector<int> hist(256, 0);
-            for (int y = 0; y < tile.rows; ++y)
-                for (int x = 0; x < tile.cols; ++x)
-                    hist[tile.at<uchar>(y, x)]++;
+            calcHistogram(tile, hist);
 
             int totalPixels = w * h;
             int clipLimitVal = static_cast<int>(clipLimit * totalPixels / 256.0f);
@@ -259,30 +262,35 @@ void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLim
 
 
 int main() {
-    Mat img = imread("C:/Users/tuana/Downloads/FresherXavisTech/Image/Image1.png", IMREAD_GRAYSCALE);
+
+    // Original Image
+    Mat img = imread("D:/FresherXavisTech/Image/Image2.jpg", IMREAD_GRAYSCALE);
     if (img.empty()) {
         cout << "Can not open the image!" << endl;
         return -1;
     }
-
-    //Step ①: chia block và equalize
-    Mat blockEqualized = localHistEqualBlock(img, 40, 40);
-
-    // Step ②: sliding window + equalize center pixel
-    Mat slidingEqualized = localHistEqualSliding(img, 9, 9, 1);  // trung tâm 3x3
-
-    // Step ③: CLAHE
-    Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));  // thử đổi clipLimit & tileGridSize
-
-    // Hiển thị kết quả
     imshow("Original Image", img);
-    imshow("Block Equalization", blockEqualized);
-    imshow("Sliding Window Equalization", slidingEqualized);
-    imshow("CLAHE", claheImg);
 
-    Mat CLAHEimg = img.clone();
-    ManualCLAHE(img, CLAHEimg, 32, 4.0);
-    imshow("Manual CLAHE", CLAHEimg);
+    //// Histogram Equalization using OpenCV library
+    //Mat eqlHist = img.clone();
+    //equalizeHist(img, eqlHist);
+    //imshow("HE OpenCV", eqlHist);
+
+    //// Basic Local Histogram Equalization
+    //Mat blockEqualized = localHistEqualBlock(img, 60);
+    //imshow("Block Equalization", blockEqualized);
+
+    //// Local Histogram Equalization using sliding window
+    //Mat slidingEqualized = localHistEqualSliding(img, 50);
+    //imshow("Sliding Window Equalization", slidingEqualized);
+
+    // CLAHE
+    //Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));
+    //imshow("CLAHE", claheImg);
+
+    //Mat CLAHEimg = img.clone();
+    //ManualCLAHE(img, CLAHEimg, 32, 4.0);
+    //imshow("Manual CLAHE", CLAHEimg);
 
     Mat CLAHEImgBil = img.clone();
     ManualCLAHE_Bilinear(img, CLAHEImgBil, 32, 3.0f);

@@ -13,7 +13,7 @@ Mat PiecewiseLinearStretched(const Mat& img, int r1, int r2, int s1, int s2);
 
 int main() 
 {
-    Mat img = imread("C:/Users/tuana/Downloads/Screenshot 2025-05-08 083637.png", IMREAD_GRAYSCALE);
+    Mat img = imread("D:/FresherXavisTech/Image/Screenshot 2025-05-08 083637.png", IMREAD_GRAYSCALE);
     if (img.empty())
     {
         cout << "Cannot open the image!";
