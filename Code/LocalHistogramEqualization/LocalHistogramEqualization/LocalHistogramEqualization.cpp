@@ -1,0 +1,293 @@
+﻿#include <opencv2/opencv.hpp>
+#include <iostream>
+
+using namespace cv;
+using namespace std;
+
+// Step ①: Histogram Equalization cho từng block MxN
+Mat localHistEqualBlock(const Mat& src, int blockWidth, int blockHeight) {
+    Mat dst = src.clone();
+    for (int y = 0; y < src.rows; y += blockHeight) {
+        for (int x = 0; x < src.cols; x += blockWidth) {
+            Rect roi(x, y,
+                min(blockWidth, src.cols - x),
+                min(blockHeight, src.rows - y));
+            Mat block = src(roi);
+            Mat equalizedBlock;
+            equalizeHist(block, equalizedBlock);
+            equalizedBlock.copyTo(dst(roi));
+        }
+    }
+    return dst;
+}
+
+// Step ②: Histogram Equalization cho mỗi pixel trung tâm của cửa sổ MxN
+Mat localHistEqualSliding(const Mat& src, int winWidth, int winHeight, int centerSize = 1) {
+    Mat dst = src.clone();
+    int halfW = winWidth / 2;
+    int halfH = winHeight / 2;
+
+    Mat padded;
+    copyMakeBorder(src, padded, halfH, halfH, halfW, halfW, BORDER_REFLECT);
+
+    for (int y = 0; y < src.rows; ++y)
+    {
+        for (int x = 0; x < src.cols; ++x)
+        {
+            // Cửa sổ xung quanh điểm (x,y)
+            Rect roi(x, y, winWidth, winHeight);
+            Mat window = padded(roi);
+
+            // Tính histogram equalization cho vùng cửa sổ
+            Mat eqWindow;
+            equalizeHist(window, eqWindow);
+
+            // Cập nhật lại pixel tại tâm
+            dst.at<uchar>(y, x) = eqWindow.at<uchar>(halfH, halfW);
+        }
+    }
+    return dst;
+}
+
+// Step ③: CLAHE trong OpenCV
+Mat applyCLAHE(const Mat& src, double clipLimit, Size tileGridSize) {
+    Ptr<CLAHE> clahe = createCLAHE(clipLimit, tileGridSize);
+    Mat dst;
+    clahe->apply(src, dst);
+    return dst;
+}
+
+// Hàm tính histogram của một tile
+void calcHistogram(const Mat& tile, vector<int>& hist) {
+    for (int i = 0; i < tile.rows; ++i) {
+        for (int j = 0; j < tile.cols; ++j) {
+            int pixelValue = tile.at<uchar>(i, j);
+            hist[pixelValue]++;
+        }
+    }
+}
+
+void clipHistogram(vector<int>& hist, int clipLimit)
+{
+    int totalPixels = 0;
+    int excess = 0;
+
+    // Tính totalPixels
+    for (int i = 0; i < hist.size(); ++i) {
+        totalPixels += hist[i];
+    }
+
+    int maxAllowed = static_cast<int>(clipLimit * totalPixels / 256);
+
+    // Clipping các giá trị quá mức
+    for (int i = 0; i < hist.size(); ++i)
+    {
+        if (hist[i] > maxAllowed) 
+        {
+            excess += hist[i] - maxAllowed;
+            hist[i] = maxAllowed;
+        }
+    }
+    // Phân phối lại các giá trị dư thừa vào các giá trị khác trong histogram
+    int idx = 0;
+    while (excess > 0) 
+    {
+        hist[idx]++;
+        excess--;
+        idx++;
+        if (idx == 256) idx = 0;
+    }
+
+}
+
+void equalizeHistogram(vector<int>& hist, Mat& tile)
+{
+    int totalPixels = tile.rows * tile.cols;
+
+    vector<int> cdf(hist.size(), 0);
+    cdf[0] = hist[0];
+    for (int i = 1; i < hist.size(); ++i) {
+        cdf[i] = cdf[i - 1] + hist[i];
+    }
+
+    // Normalize the CDF
+    int minCDF = *min_element(cdf.begin(), cdf.end());
+    for (int i = 0; i < hist.size(); ++i) {
+        cdf[i] = (cdf[i] - minCDF) * 255 / (totalPixels - minCDF);
+    }
+
+    // Áp dụng CDF cho từng pixel trong tile
+    for (int i = 0; i < tile.rows; ++i) {
+        for (int j = 0; j < tile.cols; ++j) {
+            int pixelValue = tile.at<uchar>(i, j);
+            tile.at<uchar>(i, j) = cdf[pixelValue];
+        }
+    }
+}
+void ManualCLAHE(const Mat& img, Mat& result, int tileSize, int clipLimit)
+{
+    int rows = img.rows;
+    int cols = img.cols;
+    result = img.clone();
+    for (int i = 0; i < rows; i += tileSize)
+    {
+        for (int j = 0; j < cols; j += tileSize)
+        {
+            Rect roi(j, i, min(tileSize, cols - j), min(tileSize, rows - i));
+            Mat tile = img(roi);
+
+            // Tính toán histogram cho tile
+            vector<int> hist(256, 0);
+            calcHistogram(tile, hist);
+
+            //ClipHistogram
+            clipHistogram(hist, clipLimit);
+
+            // Histogram equalization cho tile
+            equalizeHistogram(hist, tile);
+            
+            tile.copyTo(result(roi));
+        }
+    }
+}
+
+void ManualCLAHE_Bilinear(const Mat& src, Mat& dst, int tileSize, double clipLimit)
+{
+    dst = src.clone();
+    int rows = src.rows;
+    int cols = src.cols;
+    int nTilesY = (rows + tileSize - 1) / tileSize;
+    int nTilesX = (cols + tileSize - 1) / tileSize;
+
+    // Precompute LUTs cho mỗi tile
+    vector<vector<vector<uchar>>> LUTs(nTilesY, vector<vector<uchar>>(nTilesX, vector<uchar>(256, 0)));
+
+    for (int i = 0; i < nTilesY; ++i)
+    {
+        for (int j = 0; j < nTilesX; ++j)
+        {
+            int y0 = i * tileSize;
+            int x0 = j * tileSize;
+            int h = min(tileSize, rows - y0);
+            int w = min(tileSize, cols - x0);
+            Rect roi(x0, y0, w, h);
+            Mat tile = src(roi);
+
+            // Histogram
+            vector<int> hist(256, 0);
+            for (int y = 0; y < tile.rows; ++y)
+                for (int x = 0; x < tile.cols; ++x)
+                    hist[tile.at<uchar>(y, x)]++;
+
+            int totalPixels = w * h;
+            int clipLimitVal = static_cast<int>(clipLimit * totalPixels / 256.0f);
+            int excess = 0;
+
+            // Clip histogram
+            for (int k = 0; k < 256; ++k)
+            {
+                if (hist[k] > clipLimitVal)
+                {
+                    excess += hist[k] - clipLimitVal;
+                    hist[k] = clipLimitVal;
+                }
+            }
+
+            // Redistribute excess
+            int bonus = excess / 256;
+            int remain = excess % 256;
+            for (int k = 0; k < 256; ++k)
+                hist[k] += bonus;
+            for (int k = 0; k < remain; ++k)
+                hist[k]++;
+
+            // CDF
+            vector<int> cdf(256, 0);
+            cdf[0] = hist[0];
+            for (int k = 1; k < 256; ++k)
+                cdf[k] = cdf[k - 1] + hist[k];
+
+            int minCDF = 0;
+            for (int k = 0; k < 256; ++k)
+            {
+                if (cdf[k] != 0)
+                {
+                    minCDF = cdf[k];
+                    break;
+                }
+            }
+
+            for (int k = 0; k < 256; ++k)
+            {
+                LUTs[i][j][k] = saturate_cast<uchar>((cdf[k] - minCDF) * 255 / max(1, totalPixels - minCDF));
+            }
+        }
+    }
+
+    // Apply bilinear interpolation
+    for (int y = 0; y < rows; ++y)
+    {
+        float gy = (float)y / tileSize;
+        int y1 = static_cast<int>(floor(gy));
+        int y2 = min(y1 + 1, nTilesY - 1);
+        float dy = gy - y1;
+        y1 = min(y1, nTilesY - 1);
+
+        for (int x = 0; x < cols; ++x)
+        {
+            float gx = (float)x / tileSize;
+            int x1 = static_cast<int>(floor(gx));
+            int x2 = min(x1 + 1, nTilesX - 1);
+            float dx = gx - x1;
+            x1 = min(x1, nTilesX - 1);
+
+            int val = src.at<uchar>(y, x);
+
+            float tl = LUTs[y1][x1][val];
+            float tr = LUTs[y1][x2][val];
+            float bl = LUTs[y2][x1][val];
+            float br = LUTs[y2][x2][val];
+
+            float top = tl * (1.0f - dx) + tr * dx;
+            float bottom = bl * (1.0f - dx) + br * dx;
+            float interpolated = top * (1.0f - dy) + bottom * dy;
+
+            dst.at<uchar>(y, x) = static_cast<uchar>(round(interpolated));
+        }
+    }
+}
+
+
+int main() {
+    Mat img = imread("C:/Users/tuana/Downloads/FresherXavisTech/Image/Image1.png", IMREAD_GRAYSCALE);
+    if (img.empty()) {
+        cout << "Can not open the image!" << endl;
+        return -1;
+    }
+
+    //Step ①: chia block và equalize
+    Mat blockEqualized = localHistEqualBlock(img, 40, 40);
+
+    // Step ②: sliding window + equalize center pixel
+    Mat slidingEqualized = localHistEqualSliding(img, 9, 9, 1);  // trung tâm 3x3
+
+    // Step ③: CLAHE
+    Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));  // thử đổi clipLimit & tileGridSize
+
+    // Hiển thị kết quả
+    imshow("Original Image", img);
+    imshow("Block Equalization", blockEqualized);
+    imshow("Sliding Window Equalization", slidingEqualized);
+    imshow("CLAHE", claheImg);
+
+    Mat CLAHEimg = img.clone();
+    ManualCLAHE(img, CLAHEimg, 32, 4.0);
+    imshow("Manual CLAHE", CLAHEimg);
+
+    Mat CLAHEImgBil = img.clone();
+    ManualCLAHE_Bilinear(img, CLAHEImgBil, 32, 3.0f);
+    imshow("Manual CLAHE Bilinear", CLAHEImgBil);
+
+    waitKey(0);
+    return 0;
+}
