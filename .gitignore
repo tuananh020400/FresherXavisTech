@@ -1,0 +1,76 @@
+# ===============================
+# Visual Studio C/C++ .gitignore
+# ===============================
+
+# Build results
+[Bb]in/
+[Oo]bj/
+*.exe
+*.dll
+*.lib
+*.app
+*.iobj
+*.ipdb
+*.pdb
+*.ilk
+*.log
+
+# Precompiled Headers
+*.pch
+*.gch
+*.ipch
+
+# Compiled source files
+*.obj
+*.o
+
+# VS Database
+*.sdf
+*.opensdf
+*.VC.db
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local history
+.localhistory/
+
+# Visual Studio working folder
+.vs/
+
+# IntelliSense database
+*.ncb
+*.aps
+*.browse.VC.db
+
+# Debug and Release folders
+Debug/
+Release/
+x64/Debug/
+x64/Release/
+
+# CMake cache
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Others
+*.tlog
+*.cache
+*.idb
+*.ipch
+*.dbmdl
+*.log
+
+# Optional backup
+*~ 
+*.bak
+*.tmp
+*.old
+
+# Crash dumps
+*.dmp
