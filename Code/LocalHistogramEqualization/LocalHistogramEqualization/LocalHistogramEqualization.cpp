@@ -254,7 +254,7 @@ Mat ManualCLAHE_Bilinear(const Mat& src, int tileSize, double clipLimit)
 int main() {
 
     // Original Image
-    Mat img = imread("D:/FresherXavisTech/Image/Image2.jpg", IMREAD_GRAYSCALE);
+    Mat img = imread("D:/FresherXavisTech/Image/images.jpg", IMREAD_GRAYSCALE);
     if (img.empty()) {
         cout << "Can not open the image!" << endl;
         return -1;
@@ -278,7 +278,7 @@ int main() {
     Mat claheImg = applyCLAHE(img, 2.0, Size(8, 8));
     imshow("CLAHE", claheImg);
 
-    Mat CLAHEimg = ManualCLAHE(img, 32, 4.0);
+    Mat CLAHEimg = ManualCLAHE(img, 32, 3.0);
     imshow("Manual CLAHE", CLAHEimg);
 
     Mat CLAHEImgBil = ManualCLAHE_Bilinear(img, 32, 3.0f);
