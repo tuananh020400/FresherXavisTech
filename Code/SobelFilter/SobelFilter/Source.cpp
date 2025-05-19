@@ -4,6 +4,7 @@ Mat SobelFilter::createGaussianKernel1D(int size, double sigma) {
     int r = size / 2;
     Mat dst(1, size, CV_64F);
     double sum = 0;
+
     for (int i = -r; i <= r; ++i)
     {
         double val = exp(-(i * i) / (2 * sigma * sigma));
@@ -19,6 +20,7 @@ Mat SobelFilter::createDerivativeKernel(int size, double sigma)
     int r = size / 2;
     Mat dst(1, size, CV_64F);
     double sum = 0;
+
     for (int i = -r; i <= r; ++i)
     {
         double val = -i * exp(-(i * i) / (2 * sigma * sigma)) / (sigma * sigma);
@@ -46,26 +48,20 @@ Mat SobelFilter::applyConvolution(const Mat& src, const Mat& kernel)
 {
     CV_Assert(kernel.rows % 2 == 1 && kernel.cols % 2 == 1);
 
-    // Bán kính kernel
     int kr = kernel.rows / 2;
     int kc = kernel.cols / 2;
 
-    // Padding ảnh gốc
     Mat padded;
     copyMakeBorder(src, padded, kr, kr, kc, kc, BORDER_DEFAULT);
 
-    // Tạo ảnh kết quả
     Mat dst = Mat::zeros(src.size(), CV_64F);
 
-    // Chuyển kernel sang kiểu double
     Mat kernel_double;
     kernel.convertTo(kernel_double, CV_64F);
 
-    // Chuyển src sang double để tránh lỗi khi nhân
     Mat src_double;
     padded.convertTo(src_double, CV_64F);
 
-    // Tích chập
     for (int y = 0; y < src.rows; ++y) {
         for (int x = 0; x < src.cols; ++x) {
             double sum = 0.0;
@@ -93,22 +89,21 @@ Mat SobelFilter::ManualSobelFilter(const Mat& src, int ksize)
     Mat gradX = applyConvolution(src, kernelX);  // giả sử trả về CV_64F hoặc CV_32F
     Mat gradY = applyConvolution(src, kernelY);
 
+    // Tạo ma trận để chứa magnitude dưới dạng double
+    Mat magnitude(src.size(), CV_64F);
+
     for (int y = 0; y < src.rows; ++y) {
         for (int x = 0; x < src.cols; ++x) {
             double gx = gradX.at<double>(y, x);
             double gy = gradY.at<double>(y, x);
-            double mag = sqrt(gx * gx + gy * gy);
-            dst.at<uchar>(y, x) = saturate_cast<uchar>(mag);
+            magnitude.at<double>(y, x) = sqrt(gx * gx + gy * gy);
         }
     }
 
-    // Để hiển thị gradX, gradY đúng
-    Mat absGradX, absGradY;
-    convertScaleAbs(gradX, absGradX);
-    convertScaleAbs(gradY, absGradY);
-
-    imshow("Gradient X", absGradX);
-    imshow("Gradient Y", absGradY);
+    // Scale về [0, 255]
+    Mat magnitudeNorm;
+    normalize(magnitude, magnitudeNorm, 0, 255, NORM_MINMAX);
+    magnitudeNorm.convertTo(dst, CV_8UC1);
 
     return dst;
 }
