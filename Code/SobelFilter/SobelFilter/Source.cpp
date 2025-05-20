@@ -83,8 +83,8 @@ Mat SobelFilter::ManualSobelFilter(const Mat& src, int ksize)
 {
     Mat dst(src.size(), CV_8UC1);
 
-    Mat kernelX = SobelFilter::createSobelKernel(ksize, 2.0, true);
-    Mat kernelY = SobelFilter::createSobelKernel(ksize, 2.0, false);
+    Mat kernelX = SobelFilter::createSobelKernel(ksize, 1.0, true);
+    Mat kernelY = SobelFilter::createSobelKernel(ksize, 1.0, false);
 
     Mat gradX = applyConvolution(src, kernelX);
     Mat gradY = applyConvolution(src, kernelY);

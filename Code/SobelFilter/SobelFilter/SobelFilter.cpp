@@ -10,7 +10,7 @@ int main() {
     imshow("Original", image);
 
     ////////////////////////Manual Sobel Filter/////////////////////////
-    Mat ManualSobel = SobelFilter::ManualSobelFilter(image, 9);
+    Mat ManualSobel = SobelFilter::ManualSobelFilter(image, 3);
     imshow("Manual Sobel Filter", ManualSobel);
 
     ////////////////////////OpenCV Sobel Filter////////////////////////
