@@ -9,11 +9,11 @@ int main() {
     }
     imshow("Original", image);
 
-    /////////////////////////////////////////////////Manual Sobel Filter
-    Mat ManualSobel = SobelFilter::ManualSobelFilter(image, 3);
+    ////////////////////////Manual Sobel Filter/////////////////////////
+    Mat ManualSobel = SobelFilter::ManualSobelFilter(image, 9);
     imshow("Manual Sobel Filter", ManualSobel);
 
-    ////////////////////////////////////////////////OpenCV Sobel Filter
+    ////////////////////////OpenCV Sobel Filter////////////////////////
     Mat grad_x, grad_y;
     Mat abs_grad_x, abs_grad_y, grad;
 

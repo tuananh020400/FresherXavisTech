@@ -13,7 +13,7 @@ public:
 	static Mat ManualSobelFilter(const Mat& src, int ksize = 3);
 private:
 	static Mat createGaussianKernel1D(int size, double sigma);
-	static Mat createDerivativeKernel(int size, double sigma);
+	static Mat createDerivativeKernel1D(int size, double sigma);
 	static Mat createSobelKernel(int size, double sigma, bool derivativeX);
 	static Mat applyConvolution(const Mat& src, const Mat& kernel);
 };

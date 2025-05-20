@@ -15,7 +15,7 @@ Mat SobelFilter::createGaussianKernel1D(int size, double sigma) {
     return dst;
 }
 
-Mat SobelFilter::createDerivativeKernel(int size, double sigma)
+Mat SobelFilter::createDerivativeKernel1D(int size, double sigma)
 {
     int r = size / 2;
     Mat dst(1, size, CV_64F);
@@ -34,7 +34,7 @@ Mat SobelFilter::createDerivativeKernel(int size, double sigma)
 Mat SobelFilter::createSobelKernel(int size, double sigma, bool derivativeX)
 {
     Mat g = SobelFilter::createGaussianKernel1D(size, sigma);
-    Mat g_deriv = SobelFilter::createDerivativeKernel(size, sigma);
+    Mat g_deriv = SobelFilter::createDerivativeKernel1D(size, sigma);
 
     if (derivativeX) {
         return g_deriv.t() * g;
@@ -83,10 +83,10 @@ Mat SobelFilter::ManualSobelFilter(const Mat& src, int ksize)
 {
     Mat dst(src.size(), CV_8UC1);
 
-    Mat kernelX = SobelFilter::createSobelKernel(ksize, 1.0, true);
-    Mat kernelY = SobelFilter::createSobelKernel(ksize, 1.0, false);
+    Mat kernelX = SobelFilter::createSobelKernel(ksize, 2.0, true);
+    Mat kernelY = SobelFilter::createSobelKernel(ksize, 2.0, false);
 
-    Mat gradX = applyConvolution(src, kernelX);  // giả sử trả về CV_64F hoặc CV_32F
+    Mat gradX = applyConvolution(src, kernelX);
     Mat gradY = applyConvolution(src, kernelY);
 
     // Tạo ma trận để chứa magnitude dưới dạng double
@@ -105,5 +105,12 @@ Mat SobelFilter::ManualSobelFilter(const Mat& src, int ksize)
     normalize(magnitude, magnitudeNorm, 0, 255, NORM_MINMAX);
     magnitudeNorm.convertTo(dst, CV_8UC1);
 
+    Mat NormGradX(gradX.size(), CV_64F);
+    normalize(gradX, NormGradX, 0, 255, NORM_MINMAX);
+    Mat dstX(src.size(), CV_8UC1);
+    gradX.convertTo(dstX, CV_8UC1);
+    imshow("Manual Gradient X", dstX);
+
+    Mat NormGradY(gradY.size(), CV_64F);
     return dst;
 }
