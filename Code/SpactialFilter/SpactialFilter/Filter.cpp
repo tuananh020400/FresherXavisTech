@@ -176,6 +176,14 @@ Mat SpactialFiltering::ManualGaussianFilter(const cv::Mat& image, int kernelSize
     return result;
 }
 
+/// <summary>
+/// Applies a manually implemented bilateral filter to the input image.
+/// </summary>
+/// <param name="image">The input grayscale image to be filtered.</param>
+/// <param name="kernelSize">The size of the square kernel (must be an odd number).</param>
+/// <param name="sigmaIntensity">Standard deviation for intensity (range) similarity.</param>
+/// <param name="sigmaSpace">Standard deviation for spatial (geometric) closeness.</param>
+/// <returns>A new image with the bilateral filter applied.</returns>
 Mat SpactialFiltering::ManualBilateralFilter(const cv::Mat& image, int kernelSize, double sigmaIntensity, double sigmaSpace)
 {
     int rows = image.rows;
@@ -186,21 +194,28 @@ Mat SpactialFiltering::ManualBilateralFilter(const cv::Mat& image, int kernelSiz
     Mat padded;
     copyMakeBorder(image, padded, k, k, k, k, cv::BORDER_DEFAULT);
 
+    // Calculate the Spatial Gaussian Kernel
+    vector<vector<double>> spatialGauss(kernelSize, vector<double>(kernelSize, 0));
+    for (int dy = -k; dy <= k; ++dy) {
+        for (int dx = -k; dx <= k; ++dx) {
+            spatialGauss[dy + k][dx + k] = exp(-(dx * dx + dy * dy) / (2 * sigmaSpace * sigmaSpace));
+        }
+    }
+
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
-            double weightSum = 0.0;
+            double weightSum = 0.0; // Normalization factor
             double bilSum = 0.0;
 
-            uchar center = padded.at<uchar>(y + k, x + k);
+            double center = static_cast<double>(padded.at<uchar>(y + k, x + k));
 
             for (int dy = -k; dy <= k; ++dy) {
                 for (int dx = -k; dx <= k; ++dx) {
-                    uchar neighbor = padded.at<uchar>(y + k + dy, x + k + dx);
-                    double gaussSpace = exp(-(dx * dx + dy * dy) / (2 * sigmaSpace * sigmaSpace));
-                    int diff = static_cast<int>(neighbor) - static_cast<int>(center);
+                    double neighbor = static_cast<double>(padded.at<uchar>(y + k + dy, x + k + dx));
+                    double diff = neighbor - center;
                     double gaussIntensity = exp(-(diff * diff) / (2.0 * sigmaIntensity * sigmaIntensity));
-                    double weight = gaussSpace * gaussIntensity;
-                    bilSum += (neighbor * weight);
+                    double weight = spatialGauss[dy + k][dx + k] * gaussIntensity;
+                    bilSum += neighbor * weight;
                     weightSum += weight;
                 }
             }

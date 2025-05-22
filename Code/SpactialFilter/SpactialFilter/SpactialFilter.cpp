@@ -8,7 +8,10 @@ int main() {
         return -1;
     }
     imshow("Original", image);
-    
+    Mat OriginalEdge;
+    Canny(image, OriginalEdge, 50, 150);
+    imshow("Original image Edge", OriginalEdge);
+
     //// Manual Box filter
     //Mat manualBox = SpactialFiltering::ManualBoxFilter(image, 25);
     //imshow("Manual Box Filter", manualBox);
@@ -18,23 +21,36 @@ int main() {
     //blur(image, Box, Size(25, 25));
     //imshow("Box Filter OpenCV", Box);
 
-    // OpenCV Gauss Blur
-    Mat Gauss;
-    GaussianBlur(image, Gauss, Size(35,35), 5.0, 5.0, BORDER_DEFAULT);
-    imshow("OpenCV Gaussian Filter", Gauss);
+     //OpenCV Gauss Blur
+    //Mat Gauss;
+    //GaussianBlur(image, Gauss, Size(31,31), 2.0, 2.0, BORDER_DEFAULT);
+    //imshow("OpenCV Gaussian Filter", Gauss);
+    //Mat GaussEdge;
+    //Canny(Gauss, GaussEdge, 50, 150);
+    //imshow("Gauss Edge", GaussEdge);
 
-    // OpenCV Bilateral Filter
-    Mat Bil;
-    bilateralFilter(image, Bil, 25, 75, 75, BORDER_DEFAULT);
-    imshow("OpenCV Bilateral Filter", Bil);
+    // Manual Gauss Blur
+    Mat ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 25, 5.0);
+    imshow("Manual Gauss Filter", ManualGauss);
+    Mat ManualGaussEdge;
+    Canny(ManualGauss, ManualGaussEdge, 50, 150);
+    imshow("Gauss Edge", ManualGaussEdge);
+     
+     
+    //// OpenCV Bilateral Filter
+    //Mat Bil;
+    //bilateralFilter(image, Bil, 31, 15, 15, BORDER_DEFAULT);
+    //imshow("OpenCV Bilateral Filter", Bil);
+    //Mat BilEdge;
+    //Canny(Bil, BilEdge, 50, 150);
+    //imshow("Bil Edge", BilEdge);
 
-    //// Manual Gauss Blur
-    //Mat ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 25, 3.0);
-    //imshow("Manual Gauss Filter", ManualGauss);
-
-    ////Manual BilateralFilter
-    //Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 75, 75);
-    //imshow("Manual Bilateral Filter", ManualBil);
+    //Manual BilateralFilter
+    Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 10, 15.0);
+    imshow("Manual Bilateral Filter", ManualBil);
+    Mat ManualBilEdge;
+    Canny(ManualBil, ManualBilEdge, 50, 150);
+    imshow("ManualBil Edge", ManualBilEdge);
 
     ////Manual Sobel Filter
     //Mat ManualSobel = SpactialFiltering::ManualSobelFilter(image, 3);
