@@ -1,0 +1,78 @@
+﻿#include "SpactialFilter.h"
+
+int main() {
+    // Đọc ảnh màu
+    Mat image = cv::imread("D:/FresherXavisTech/Image/240129_A556_PANEL ID_43(14_38)_M 2(F 1_2).tif", IMREAD_GRAYSCALE); // thay bằng đường dẫn ảnh của bạn
+    if (image.empty()) {
+        std::cerr << "Không mở được ảnh\n";
+        return -1;
+    }
+    imshow("Original", image);
+    Mat OriginalEdge;
+    Canny(image, OriginalEdge, 50, 150);
+    imshow("Original image Edge", OriginalEdge);
+
+    //// Manual Box filter
+    //Mat manualBox = SpactialFiltering::ManualBoxFilter(image, 25);
+    //imshow("Manual Box Filter", manualBox);
+
+    //// OpenCV Box filter 
+    //Mat Box = image.clone();
+    //blur(image, Box, Size(25, 25));
+    //imshow("Box Filter OpenCV", Box);
+
+     //OpenCV Gauss Blur
+    Mat Gauss;
+    GaussianBlur(image, Gauss, Size(9,9), 5.0, 5.0, BORDER_DEFAULT);
+    imshow("OpenCV Gaussian Filter", Gauss);
+    Mat GaussEdge;
+    Canny(Gauss, GaussEdge, 50, 150);
+    imshow("Gauss Edge", GaussEdge);
+
+    //// Manual Gauss Blur
+    //Mat ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 25, 5.0);
+    //imshow("Manual Gauss Filter", ManualGauss);
+    //Mat ManualGaussEdge;
+    //Canny(ManualGauss, ManualGaussEdge, 50, 150);
+    //imshow("Gauss Edge", ManualGaussEdge);
+     
+     
+    // OpenCV Bilateral Filter
+    Mat Bil;
+    bilateralFilter(image, Bil, 9, 5, 5, BORDER_DEFAULT);
+    imshow("OpenCV Bilateral Filter", Bil);
+    Mat BilEdge;
+    Canny(Bil, BilEdge, 50, 150);
+    imshow("Bil Edge", BilEdge);
+
+    ////Manual BilateralFilter
+    //Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 10, 200.0);
+    //imshow("Manual Bilateral Filter", ManualBil);
+    //Mat ManualBilEdge;
+    //Canny(ManualBil, ManualBilEdge, 50, 150);
+    //imshow("ManualBil Edge", ManualBilEdge);
+
+    ////Manual Sobel Filter
+    //Mat ManualSobel = SpactialFiltering::ManualSobelFilter(image, 3);
+    //imshow("Manual Sobel Filter", ManualSobel);
+
+    ////OpenCV Sobel Filter
+    //Mat grad_x, grad_y;
+    //Mat abs_grad_x, abs_grad_y, grad;
+
+    //// Tính đạo hàm theo x và y
+    //Sobel(image, grad_x, CV_16S, 1, 0, 3);
+    //Sobel(image, grad_y, CV_16S, 0, 1, 3);
+    //// Chuyển sang CV_8U (vì CV_16S có thể chứa giá trị âm)
+    //convertScaleAbs(grad_x, abs_grad_x);
+    //convertScaleAbs(grad_y, abs_grad_y);
+
+    //// Tổng hợp đạo hàm
+    //addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+
+    //// Hiển thị kết quả
+    //imshow("Sobel", grad);
+
+    waitKey(0);
+    return 0;
+}
