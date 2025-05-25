@@ -150,31 +150,54 @@ Mat SpactialFiltering::ManualSobelFilter(const Mat& src, int ksize)
     return dst;
 }
 
-Mat SpactialFiltering::ManualGaussianFilter(const cv::Mat& image, int kernelSize, double sigma)
+cv::Mat SpactialFiltering::ManualGaussianFilter(const Mat& image, int kernelSize, double sigma)
 {
+    CV_Assert(image.type() == CV_8UC1); // đảm bảo ảnh grayscale
+
+    int k = kernelSize / 2;
     int rows = image.rows;
     int cols = image.cols;
-    int k = kernelSize / 2;
-    Mat padded;
-    copyMakeBorder(image, padded, k, k, k, k, cv::BORDER_DEFAULT);
-    Mat result = image.clone();
-    Mat kernel = SpactialFiltering::CreateGaussKernel(kernelSize, sigma);
 
+    std::vector<float> kernel1D(kernelSize);
+    float sum = 0.0f;
+    for (int i = 0; i < kernelSize; ++i) {
+        int x = i - k;
+        kernel1D[i] = std::exp(-(x * x) / (2.0f * sigma * sigma));
+        sum += kernel1D[i];
+    }
+    for (int i = 0; i < kernelSize; ++i)
+        kernel1D[i] /= sum;
+
+    cv::Mat temp(rows, cols, CV_32FC1);
     for (int y = 0; y < rows; ++y) {
+        const uchar* srcRow = image.ptr<uchar>(y);
+        float* dstRow = temp.ptr<float>(y);
         for (int x = 0; x < cols; ++x) {
-            double sum = 0.0;
-            for (int dy = 0; dy < kernelSize; ++dy) {
-                for (int dx = 0; dx < kernelSize; ++dx) {
-                    uchar pixel = padded.at<uchar>(y + dy, x + dx);
-                    double weight = kernel.at<double>(dy, dx);
-                    sum += pixel * weight;
-                }
+            float val = 0.0f;
+            for (int i = -k; i <= k; ++i) {
+                int xi = std::max(0, std::min(cols - 1, x + i));
+                val += kernel1D[i + k] * srcRow[xi];
             }
-            result.at<uchar>(y, x) = sum;
+            dstRow[x] = val;
         }
     }
+
+    cv::Mat result(rows, cols, CV_8UC1);
+    for (int y = 0; y < rows; ++y) {
+        uchar* dstRow = result.ptr<uchar>(y);
+        for (int x = 0; x < cols; ++x) {
+            float val = 0.0f;
+            for (int i = -k; i <= k; ++i) {
+                int yi = std::max(0, std::min(rows - 1, y + i));
+                val += kernel1D[i + k] * temp.ptr<float>(yi)[x];
+            }
+            dstRow[x] = cv::saturate_cast<uchar>(val + 0.5f); // làm tròn & ép kiểu an toàn
+        }
+    }
+
     return result;
 }
+
 
 /// <summary>
 /// Applies a manually implemented bilateral filter to the input image.

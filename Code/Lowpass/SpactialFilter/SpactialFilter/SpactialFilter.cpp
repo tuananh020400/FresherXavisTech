@@ -1,4 +1,6 @@
 ﻿#include "SpactialFilter.h"
+#include <chrono>
+using namespace chrono;
 
 int main() {
     // Đọc ảnh màu
@@ -8,9 +10,8 @@ int main() {
         return -1;
     }
     imshow("Original", image);
-    Mat OriginalEdge;
-    Canny(image, OriginalEdge, 50, 150);
-    imshow("Original image Edge", OriginalEdge);
+    imwrite("D:/FresherXavisTech/Image/Result/Original.png", image);
+
 
     //// Manual Box filter
     //Mat manualBox = SpactialFiltering::ManualBoxFilter(image, 25);
@@ -23,34 +24,33 @@ int main() {
 
      //OpenCV Gauss Blur
     Mat Gauss;
-    GaussianBlur(image, Gauss, Size(9,9), 5.0, 5.0, BORDER_DEFAULT);
+    auto start = high_resolution_clock::now();
+    GaussianBlur(image, Gauss, Size(9,9), 1.0, 1.0, BORDER_CONSTANT);
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Time of gauss: " << duration.count() << " ms" << endl;
     imshow("OpenCV Gaussian Filter", Gauss);
-    Mat GaussEdge;
-    Canny(Gauss, GaussEdge, 50, 150);
-    imshow("Gauss Edge", GaussEdge);
+    imwrite("D:/FresherXavisTech/Image/Result/Gauss.png", Gauss);
 
     //// Manual Gauss Blur
-    //Mat ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 25, 5.0);
+    //Mat ManualGauss;
+    //start = high_resolution_clock::now();
+    //ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 25, 5.0);
+    //end = high_resolution_clock::now();
+    //duration = duration_cast<milliseconds>(end - start);
+    //cout << "Time of manual gauss: " << duration.count() << " ms" << endl;
     //imshow("Manual Gauss Filter", ManualGauss);
-    //Mat ManualGaussEdge;
-    //Canny(ManualGauss, ManualGaussEdge, 50, 150);
-    //imshow("Gauss Edge", ManualGaussEdge);
-     
+
      
     // OpenCV Bilateral Filter
     Mat Bil;
-    bilateralFilter(image, Bil, 9, 5, 5, BORDER_DEFAULT);
+    bilateralFilter(image, Bil, 9, 1, 1, BORDER_DEFAULT);
     imshow("OpenCV Bilateral Filter", Bil);
-    Mat BilEdge;
-    Canny(Bil, BilEdge, 50, 150);
-    imshow("Bil Edge", BilEdge);
+    imwrite("D:/FresherXavisTech/Image/Result/Bilateral.png", Bil);
 
     ////Manual BilateralFilter
     //Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 10, 200.0);
     //imshow("Manual Bilateral Filter", ManualBil);
-    //Mat ManualBilEdge;
-    //Canny(ManualBil, ManualBilEdge, 50, 150);
-    //imshow("ManualBil Edge", ManualBilEdge);
 
     ////Manual Sobel Filter
     //Mat ManualSobel = SpactialFiltering::ManualSobelFilter(image, 3);
