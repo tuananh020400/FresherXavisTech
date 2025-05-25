@@ -25,7 +25,7 @@ int main() {
      //OpenCV Gauss Blur
     Mat Gauss;
     auto start = high_resolution_clock::now();
-    GaussianBlur(image, Gauss, Size(9,9), 1.0, 1.0, BORDER_CONSTANT);
+    GaussianBlur(image, Gauss, Size(9,9), 3.0, 3.0, BORDER_CONSTANT);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
     cout << "Time of gauss: " << duration.count() << " ms" << endl;
@@ -44,7 +44,7 @@ int main() {
      
     // OpenCV Bilateral Filter
     Mat Bil;
-    bilateralFilter(image, Bil, 9, 1, 1, BORDER_DEFAULT);
+    bilateralFilter(image, Bil, 9, 25, 3, BORDER_CONSTANT);
     imshow("OpenCV Bilateral Filter", Bil);
     imwrite("D:/FresherXavisTech/Image/Result/Bilateral.png", Bil);
 
