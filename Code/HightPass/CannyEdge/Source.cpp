@@ -121,6 +121,7 @@ Mat CannyEdge::nonMaxSuppression(const Mat& magnitude, const Mat& angle)
             }
         }
     }
+    imshow("Suppresed", suppressed);
     return suppressed;
 }
 

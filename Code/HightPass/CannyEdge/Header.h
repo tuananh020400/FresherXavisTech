@@ -21,6 +21,7 @@ private:
 	static void computeGradient(const Mat& gx, const Mat& gy, Mat& magnitude, Mat& angle);
 	static Mat nonMaxSuppression(const Mat& magnitude, const Mat& angle);
 	static Mat hysteresis(const Mat& img, double lowThresh, double highThresh);
+	static double bilinearInterpolation(const Mat& img, double x, double y);
 };
 
 
