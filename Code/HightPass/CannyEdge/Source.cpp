@@ -68,11 +68,11 @@ Mat CannyEdge::hysteresis(const Mat& img, double lowThresh, double highThresh)
     int rows = img.rows;
     int cols = img.cols;
 
-    // Biên mạnh: 255, biên yếu: 100
+    // Strong edge: 255, weak edge: 100
     const uchar strong = 255;
     const uchar weak = 100;
 
-    // Đánh dấu biên mạnh và yếu
+    // Marked trong and weak edge
     for (int y = 0; y < rows; y++) {
         for (int x = 0; x < cols; x++) {
             double val = img.at<double>(y, x);
@@ -83,14 +83,13 @@ Mat CannyEdge::hysteresis(const Mat& img, double lowThresh, double highThresh)
         }
     }
 
-    // Nối biên yếu nếu liên kết với biên mạnh
+    // Linking edge point
     bool changed;
     do {
         changed = false;
         for (int y = 1; y < rows - 1; y++) {
             for (int x = 1; x < cols - 1; x++) {
                 if (res.at<uchar>(y, x) == weak) {
-                    // Kiểm tra 8 láng giềng có biên mạnh không
                     if (
                         res.at<uchar>(y - 1, x - 1) == strong || res.at<uchar>(y - 1, x) == strong ||
                         res.at<uchar>(y - 1, x + 1) == strong || res.at<uchar>(y, x - 1) == strong ||
@@ -117,27 +116,20 @@ Mat CannyEdge::CannyEdgeFilter(const Mat& img, double lowThresh, double highThre
     //Gaussian Blur
     Mat imgBlur;
     GaussianBlur(img, imgBlur, Size(5, 5), 1.4, 1.4);
-    imshow("Manual blur", imgBlur);
 
-    //Sobel
+    //Sobel Culculate gradient in two directions
     Mat gx, gy, gx_abs, gy_abs;
     Sobel(imgBlur, gx, CV_64F, 1, 0, 3);
-    convertScaleAbs(gx, gx_abs);
     Sobel(imgBlur, gy, CV_64F, 0, 1, 3);
-    convertScaleAbs(gy, gy_abs);
-    imshow("Manual Gradient X", gx_abs);
-    imshow(" Manual Gradient Y", gy_abs);
 
     // Culculate gradient manitude and direction
-    Mat magnitude, angle, manitude_abs;
+    Mat magnitude, angle;
     CannyEdge::computeGradient(gx, gy, magnitude, angle);
-    convertScaleAbs(magnitude, manitude_abs);
-    imshow("Manual Gradient Magnitude", manitude_abs);
 
     // Non-Maximum Suppression
     Mat nms = CannyEdge::nonMaxSuppression(magnitude, angle);
 
-    // 5. Hysteresis Thresholding
+    // Hysteresis Thresholding
     Mat edges = hysteresis(nms, lowThresh, highThresh);
 
     return edges;

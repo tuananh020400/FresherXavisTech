@@ -4,7 +4,7 @@ using namespace chrono;
 
 int main() {
     // Đọc ảnh màu
-    Mat image = cv::imread("D:/FresherXavisTech/Image/240129_A556_PANEL ID_43(14_38)_M 2(F 1_2).tif", IMREAD_GRAYSCALE); // thay bằng đường dẫn ảnh của bạn
+    Mat image = cv::imread("D:/FresherXavisTech/Image/240129_A556_PANEL ID_43(14_38)_M 1(F 1_2).tif", IMREAD_GRAYSCALE); // thay bằng đường dẫn ảnh của bạn
     if (image.empty()) {
         std::cerr << "Không mở được ảnh\n";
         return -1;
@@ -25,40 +25,40 @@ int main() {
     //OpenCV Gauss Blur
     Mat Gauss;
     auto start = high_resolution_clock::now();
-    GaussianBlur(image, Gauss, Size(9,9), 1.5, 1.5, BORDER_CONSTANT);
+    GaussianBlur(image, Gauss, Size(9,9), 1, 1, BORDER_CONSTANT);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
     cout << "Time of gauss: " << duration.count() << " ms" << endl;
     imshow("OpenCV Gaussian Filter", Gauss);
     imwrite("D:/FresherXavisTech/Image/Result/Gauss.png", Gauss);
 
-    // Manual Gauss Blur
-    Mat ManualGauss;
-    start = high_resolution_clock::now();
-    ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 9, 1.5);
-    end = high_resolution_clock::now();
-    duration = duration_cast<milliseconds>(end - start);
-    cout << "Time of manual gauss: " << duration.count() << " ms" << endl;
-    imshow("Manual Gauss Filter", ManualGauss);
+    //// Manual Gauss Blur
+    //Mat ManualGauss;
+    //start = high_resolution_clock::now();
+    //ManualGauss = SpactialFiltering::ManualGaussianFilter(image, 9, 1.5);
+    //end = high_resolution_clock::now();
+    //duration = duration_cast<milliseconds>(end - start);
+    //cout << "Time of manual gauss: " << duration.count() << " ms" << endl;
+    //imshow("Manual Gauss Filter", ManualGauss);
 
      
     // OpenCV Bilateral Filter
     Mat Bil;
     start = high_resolution_clock::now();
-    bilateralFilter(image, Bil, 9, 10, 1.5, BORDER_CONSTANT);
+    bilateralFilter(image, Bil, 9, 20, 3, BORDER_CONSTANT);
     end = high_resolution_clock::now();
     duration = duration_cast<milliseconds>(end - start);
     cout << "Time of OpenCV Bilateral Filter: " << duration.count() << " ms" << endl;
     imshow("OpenCV Bilateral Filter", Bil);
-    //imwrite("D:/FresherXavisTech/Image/Result/Bilateral.png", Bil);
+    imwrite("D:/FresherXavisTech/Image/Result/Bilateral.png", Bil);
 
-    //Manual BilateralFilter
-    start = high_resolution_clock::now();
-    Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 10, 1.5);
-    end = high_resolution_clock::now();
-    imshow("Manual Bilateral Filter", ManualBil);
-    duration = duration_cast<milliseconds>(end - start);
-    cout << "Time of Manual Bilateral Filter: " << duration.count() << " ms" << endl;
+    ////Manual BilateralFilter
+    //start = high_resolution_clock::now();
+    //Mat ManualBil = SpactialFiltering::ManualBilateralFilter(image, 25, 10, 1.5);
+    //end = high_resolution_clock::now();
+    //imshow("Manual Bilateral Filter", ManualBil);
+    //duration = duration_cast<milliseconds>(end - start);
+    //cout << "Time of Manual Bilateral Filter: " << duration.count() << " ms" << endl;
 
     ////Manual Sobel Filter
     //Mat ManualSobel = SpactialFiltering::ManualSobelFilter(image, 3);
