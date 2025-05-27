@@ -45,7 +45,7 @@ int main() {
     // OpenCV Bilateral Filter
     Mat Bil;
     start = high_resolution_clock::now();
-    bilateralFilter(image, Bil, 9, 20, 3, BORDER_CONSTANT);
+    bilateralFilter(image, Bil, 9, 30, 3, BORDER_CONSTANT);
     end = high_resolution_clock::now();
     duration = duration_cast<milliseconds>(end - start);
     cout << "Time of OpenCV Bilateral Filter: " << duration.count() << " ms" << endl;
