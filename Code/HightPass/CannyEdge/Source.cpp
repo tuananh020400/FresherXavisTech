@@ -115,7 +115,7 @@ Mat CannyEdge::CannyEdgeFilter(const Mat& img, double lowThresh, double highThre
 {
     //Gaussian Blur
     Mat imgBlur;
-    GaussianBlur(img, imgBlur, Size(5, 5), 1.4, 1.4);
+    GaussianBlur(img, imgBlur, Size(5, 5), 1, 1);
 
     //Sobel Culculate gradient in two directions
     Mat gx, gy, gx_abs, gy_abs;
