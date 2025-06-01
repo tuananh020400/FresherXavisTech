@@ -1,70 +1,93 @@
-﻿#include <opencv2/opencv.hpp>
-#include <iostream>
+﻿#include <iostream>
+#include <opencv2/opencv.hpp>
 
-using namespace cv;
 using namespace std;
+using namespace cv;
 
-// Hàm erosion với SE có don't care (-1)
-Mat erosion_with_dont_care(const Mat& image, const Mat& SE) {
-	int img_h = image.rows;
-	int img_w = image.cols;
-	int se_h = SE.rows;
-	int se_w = SE.cols;
-	int pad_h = se_h / 2;
-	int pad_w = se_w / 2;
 
-	// Padding ảnh nhị phân bằng 0
-	Mat padded_img;
-	copyMakeBorder(image, padded_img, pad_h, pad_h, pad_w, pad_w, BORDER_CONSTANT, Scalar(0));
+Mat morphologyHMT(const Mat img, const Mat se)
+{
+    CV_Assert(img.type() == CV_8UC1);
+    CV_Assert(se.type() == CV_32SC1);
 
-	Mat result = Mat::zeros(img_h, img_w, CV_8UC1);
+    Mat result = Mat::zeros(img.size(), CV_8UC1);
 
-	for (int i = 0; i < img_h; ++i) {
-		for (int j = 0; j < img_w; ++j) {
-			bool match = true;
-			for (int x = 0; x < se_h; ++x) {
-				for (int y = 0; y < se_w; ++y) {
-					int se_val = SE.at<int>(x, y);
-					if (se_val == -1)
-						continue;  // don't care
-					int img_val = padded_img.at<uchar>(i + x, j + y) > 0 ? 1 : 0;
-					if (se_val != img_val) {
-						match = false;
-						break;
-					}
-				}
-				if (!match) break;
-			}
-			result.at<uchar>(i, j) = match ? 255 : 0;  // ảnh nhị phân 0/255
-		}
-	}
+    Mat padded;
+    int padY = se.rows / 2;
+    int padX = se.cols / 2;
+    copyMakeBorder(img, padded, padY, padY, padX, padX, BORDER_DEFAULT);
 
-	return result;
+    for (int i = 0; i < img.rows; ++i) {
+        for (int j = 0; j < img.cols; ++j){
+            bool match = true;
+            for (int u = 0; u < se.rows && match; ++u) {
+                for (int v = 0; v < se.cols; ++v) {
+                    int seVal = se.at<int>(u, v);
+                    if (seVal == 0) continue;
+                    int imgVal = padded.at<uchar>(i + u, j + v) > 0 ? 1 : 0;
+                    if ((seVal == 1 && imgVal != 1) || (seVal == -1 && imgVal != 0)) {
+                        match = false;
+                        break;
+                    }
+                }
+            }
+            if (match)
+            {
+                result.at<uchar>(i, j) = 255;
+            }
+        }
+    }
+
+    return result;
 }
 
-int main() {
-	// Tạo ảnh nhị phân mẫu
-	uchar data[] = {
-		0,0,255,255,0,
-		0,255,255,255,0,
-		255,255,255,0,0,
-		0,255,0,0,0,
-		0,0,0,0,0
-	};
-	Mat image(5, 5, CV_8UC1, data);
+Mat morphologyHMTOpenCV(const Mat img, const Mat se)
+{
+    CV_Assert(img.type() == CV_8UC1);
+    CV_Assert(se.type() == CV_32SC1);
 
-	// Tạo SE với -1 là don't care (kiểu int)
-	int se_data[] = {
-		1, 0, -1,
-		0, 1,  0,
-		-1,0,  1
-	};
-	Mat SE(3, 3, CV_32SC1, se_data);
+    // Tạo mask foreground: nơi có giá trị 1
+    Mat fg_mask = (se == 1);
 
-	Mat eroded = erosion_with_dont_care(image, SE);
+    // Tạo mask background: nơi có giá trị -1
+    Mat bg_mask = (se == -1);
 
-	cout << "Input image:\n" << image << endl;
-	cout << "Eroded image:\n" << eroded << endl;
+    Mat eroded_fg;
+    erode(img, eroded_fg, fg_mask);
 
+    Mat src_inv;
+    bitwise_not(img, src_inv); // 0 <-> 255
+
+    Mat eroded_bg;
+    erode(src_inv, eroded_bg, bg_mask);
+
+    Mat result;
+    bitwise_and(eroded_fg, eroded_bg, result);
+
+    return result;
+}
+
+int main(void)
+{
+    Mat image = (Mat_<uchar>(7,15) << 
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0,
+        0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,
+        0, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 255, 0,
+        0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,
+        0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    );
+
+    Mat se = (Mat_<int>(3, 3) <<
+        0, 0, -1,
+        1, 1, -1,
+        0, 0, -1
+        );
+    Mat result;
+    Mat result2 = morphologyHMT(image, se);
+    Mat result3 = morphologyHMTOpenCV(image, se);
+    morphologyEx(image, result, MORPH_HITMISS, se);
+	waitKey(0);
 	return 0;
 }
