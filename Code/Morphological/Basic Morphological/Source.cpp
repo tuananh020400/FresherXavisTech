@@ -93,13 +93,13 @@ Mat Morphological::HMT(const Mat& img, const Mat& struct_elem)
     Mat bg_mask = (struct_elem == -1);
 
     Mat eroded_fg;
-    morphologyEx(img, eroded_fg, MORPH_ERODE, fg_mask);
+    morphologyEx(img, eroded_fg, MORPH_ERODE, fg_mask, Point(-1,-1), 1, BORDER_CONSTANT, Scalar(0));
 
     Mat src_inv;
     bitwise_not(img, src_inv); // 0 <-> 255
 
     Mat eroded_bg;
-    morphologyEx(src_inv, eroded_bg, MORPH_ERODE, bg_mask);
+    morphologyEx(src_inv, eroded_bg, MORPH_ERODE, bg_mask, Point(-1, -1), 1, BORDER_CONSTANT, Scalar(255));
 
     Mat result;
     bitwise_and(eroded_fg, eroded_bg, result);
