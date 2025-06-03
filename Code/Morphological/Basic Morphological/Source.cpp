@@ -106,4 +106,64 @@ Mat Morphological::HMT(const Mat& img, const Mat& struct_elem)
 
     return result;
 }
+
+Mat Morphological::thinning(const Mat& img)
+{
+    vector<Mat> struct_elem;
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        -1, -1, -1,
+        0, 1, 0,
+        1, 1, 1));  // 0°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        0, -1, -1,
+        1, 1, -1,
+        1, 1, 0));  // 45°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        1, 0, -1,
+        1, 1, -1,
+        1, 0, -1));  // 90°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        1, 1, 0,
+        1, 1, -1,
+        0, -1, -1));  // 135°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        1, 1, 1,
+        0, 1, 0,
+        -1, -1, -1));  // 180°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        0, 1, 1,
+        -1, 1, 1,
+        -1, -1, 0));  // 225°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        -1, 0, 1,
+        -1, 1, 1,
+        -1, 0, 1));  // 270°
+
+    struct_elem.push_back((Mat_<int>(3, 3) <<
+        -1, -1, 0,
+        -1, 1, 1,
+        0, 1, 1));  // 315°
+
+    Mat prev = img.clone();
+    Mat curr = img.clone();
+    while (true) {
+        Mat diff;
+        for (int i = 0; i < 8; ++i) {
+            Mat hmt = Morphological::HMT(curr, struct_elem[i]);
+            subtract(curr, hmt, curr);
+        }
+        absdiff(curr, prev, diff);
+        if (countNonZero(diff) == 0)
+            break;
+        curr.copyTo(prev);
+    }
+    return curr;
+}
+
 #endif // !_MORPHOLOGICAL_C_

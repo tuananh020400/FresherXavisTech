@@ -14,6 +14,7 @@ public:
 	static Mat opening(const Mat& img, const Mat& struct_elem);
 	static Mat closing(const Mat& img, const Mat& struct_elem);
 	static Mat HMT(const Mat& img, const Mat& struct_elem);
+	static Mat thinning(const Mat& img);
 private:
 };
 #endif // !_MORPHOLOGICAL_H_

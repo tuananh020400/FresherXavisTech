@@ -74,7 +74,7 @@ void HMT2()
         0, 255, 255, 255, 0, 0, 0, 255,
         0, 255, 255, 255, 0, 0, 0, 0,
         0, 255, 255, 255, 0, 255, 0, 0,
-        0, 0, 255, 0, 0, 0, 0, 0, 
+        0, 0, 255, 0, 0, 0, 0, 0,
         0, 0, 255, 0, 0, 255, 255, 0,
         0, 255, 0, 255, 0, 0, 255, 0,
         0, 255, 255, 0, 0, 0, 0, 0
@@ -137,7 +137,7 @@ void boundary()
     waitKey(0);
 }
 
-void thinning()
+void Thin()
 {
     Mat image = (Mat_<uchar>(5, 11) <<
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -147,66 +147,17 @@ void thinning()
         255, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0
         );
 
-    vector<Mat> struct_elem;
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        -1, -1, -1,
-        0, 1, 0,
-        1, 1, 1));  // 0°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        0, -1, -1,
-        1, 1, -1,
-        1, 1, 0));  // 45°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        1, 0, -1,
-        1, 1, -1,
-        1, 0, -1));  // 90°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        1, 1, 0,
-        1, 1, -1,
-        0, -1, -1));  // 135°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        1, 1, 1,
-        0, 1, 0,
-        -1, -1, -1));  // 180°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        0, 1, 1,
-        -1, 1, 1,
-        -1, -1, 0));  // 225°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        -1, 0, 1,
-        -1, 1, 1,
-        -1, 0, 1));  // 270°
-
-    struct_elem.push_back((Mat_<int>(3, 3) <<
-        -1, -1, 0,
-        -1, 1, 1,
-        0, 1, 1));  // 315°
-
-    Mat prev = image.clone();
-    Mat curr = image.clone();
-    while (true) {
-        Mat diff;
-        for (int i = 0; i < 8; ++i) {
-            Mat hmt = Morphological::HMT(curr, struct_elem[i]);
-            subtract(curr, hmt, curr);
-        }
-        absdiff(curr, prev, diff);
-        if (countNonZero(diff) == 0)
-            break;
-        curr.copyTo(prev);
-    }
-
+    Mat thined = Morphological::thinning(image);
     waitKey(0);
 }
 
 void HMTcompare()
 {
+    //https://chatgpt.com/share/683e8104-3bc8-8004-8b35-dc5563e9a991
+    //Mat image(7, 13, CV_8UC1, Scalar(255));
+    //line(image, Point(4, 5), Point(5, 5), Scalar(0));
+    //rectangle(image, Point(0, 0), Point(12, 6), Scalar(0));
+    //rectangle(image, Point(10, 2), Point(11, 5), Scalar(0));
     Mat image = (Mat_<uchar>(5, 11) <<
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0,
@@ -214,23 +165,77 @@ void HMTcompare()
         255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0,
         255, 255, 255, 0, 0, 255, 255, 255, 255, 0, 0
         );
-    //Mat image(7, 13, CV_8UC1, Scalar(255));
-    //line(image, Point(4, 5), Point(5, 5), Scalar(0));
-    //rectangle(image, Point(0, 0), Point(12, 6), Scalar(0));
-    //rectangle(image, Point(10, 2), Point(11, 5), Scalar(0));
     Mat struct_elem = (Mat_<int>(3, 3) <<
         -1, -1, -1,
         0, 1, 0,
         1, 1, 1
         );
-    Mat imgNormal = image/255;
     Mat result1 = Morphological::HMT(image, struct_elem);
     Mat result2;
+    Mat result3;
+    Mat result4;
+
     morphologyEx(image, result2, MORPH_HITMISS, struct_elem, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(0));
+    morphologyEx(image, result3, MORPH_HITMISS, struct_elem, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(255));
+    morphologyEx(image, result4, MORPH_HITMISS, struct_elem);
     waitKey(0);
 }
+
+void MorphologycalSkeleton()
+{
+    Mat img(10, 5, CV_8UC1, Scalar(255));
+    line(img, Point(0, 1), Point(0, 4), Scalar(0));
+    line(img, Point(4, 0), Point(4, 4), Scalar(0));
+    line(img, Point(3, 0), Point(3, 2), Scalar(0));
+    line(img, Point(1, 0), Point(2, 0), Scalar(0));
+
+    Mat struct_elem = getStructuringElement(MORPH_RECT, Size(3, 3));
+
+    Mat skeleton = Mat::zeros(img.size(), CV_8UC1);
+    Mat eroded, opened, sk;
+
+    morphologyEx(img, opened, MORPH_OPEN, struct_elem);
+    subtract(img, opened, sk);
+    bitwise_or(skeleton, sk, skeleton);
+    Mat prev = img.clone();
+
+    vector<Mat> restore;
+    Mat restored = Mat::zeros(img.size(), CV_8UC1);
+    bitwise_or(restored, sk, restored);
+
+    // Skeleton
+    while (true) {
+        erode(prev, eroded, struct_elem, Point(-1, -1), 1, BORDER_CONSTANT, Scalar(0));
+        morphologyEx(eroded, opened, MORPH_OPEN, struct_elem);
+
+        subtract(eroded, opened, sk);
+
+        if (countNonZero(eroded) == 0)
+            break;
+
+        restore.push_back(sk.clone());       // Lưu layer skeleton
+        bitwise_or(skeleton, sk, skeleton);
+
+        prev = eroded.clone();
+    }
+
+    // Restore from skeleton layers
+    for (size_t i = 0; i < restore.size(); i++) {
+        Mat tmp = restore[i].clone();
+        for (size_t j = 0; j <= i; j++) {
+            dilate(tmp, tmp, struct_elem);
+        }
+        bitwise_or(restored, tmp, restored);
+    }
+
+    imshow("Original", img);
+    imshow("Skeleton", skeleton);
+    imshow("Restored", restored);
+    waitKey(0);
+}
+
 int main()
 {
-    thinning();
+    MorphologycalSkeleton();
     return 0;
 }
