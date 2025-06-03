@@ -166,4 +166,52 @@ Mat Morphological::thinning(const Mat& img)
     return curr;
 }
 
+Mat Morphological::Skeleton(const Mat& img, const Mat& struct_elem)
+{
+    Mat skeleton = Mat::zeros(img.size(), CV_8UC1);
+    Mat eroded, opened, skeletonLayer;
+
+    morphologyEx(img, opened, MORPH_OPEN, struct_elem);
+    subtract(img, opened, skeletonLayer);
+    bitwise_or(skeleton, skeletonLayer, skeleton);
+    Mat prev = img.clone();
+
+    // Skeleton
+    while (true) {
+        erode(prev, eroded, struct_elem, Point(-1, -1), 1, BORDER_CONSTANT, Scalar(0));
+        morphologyEx(eroded, opened, MORPH_OPEN, struct_elem);
+
+        subtract(eroded, opened, skeletonLayer);
+
+        if (countNonZero(eroded) == 0)
+            break;
+
+        bitwise_or(skeleton, skeletonLayer, skeleton);
+
+        prev = eroded.clone();
+    }
+
+    return skeleton;
+}
+
+Mat Morphological::BoundaryErosion(const Mat& img, const Mat& struct_elem)
+{
+    Mat result;
+    Mat eroded = Morphological::erosion(img, struct_elem);
+    subtract(img, eroded, result);
+
+    return result;
+}
+
+Mat Morphological::MorphologicalGradient(const Mat& img, const Mat& struct_elem)
+{
+    Mat result;
+    Mat eroded = Morphological::erosion(img, struct_elem);
+    Mat dilated = Morphological::dilation(img, struct_elem);
+    subtract(dilated, eroded, result);
+
+    return result;
+}
+
+
 #endif // !_MORPHOLOGICAL_C_

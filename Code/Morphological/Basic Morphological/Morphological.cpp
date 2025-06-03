@@ -14,6 +14,7 @@ void Basic()
         255, 255, 255,
         255, 255, 255
         );
+    struct_elem = getStructuringElement(MORPH_RECT, Size(5, 5));
 
     // Normalize
     for (int i = 0; i < struct_elem.rows; i++) {
@@ -26,12 +27,17 @@ void Basic()
     Mat opened = Morphological::opening(img, struct_elem);
     Mat dilated = Morphological::dilation(opened, struct_elem);
     Mat closed = Morphological::closing(opened, struct_elem);
+    Mat thinned = Morphological::thinning(closed);
+    Mat skeleted = Morphological::Skeleton(closed, getStructuringElement(MORPH_RECT, Size(3, 3)));
+    closed = Morphological::closing(skeleted, getStructuringElement(MORPH_RECT, Size(3, 3)));
 
     imshow("Original", img);
     imshow("Erosion", eroded);
     imshow("Dilation", dilated);
     imshow("Opening", opened);
     imshow("Closing", closed);
+    imshow("Thinned", thinned);
+    imshow("Skeleton", skeleted);
 }
 
 void HMT1()
@@ -181,7 +187,7 @@ void HMTcompare()
     waitKey(0);
 }
 
-void MorphologycalSkeleton()
+void MorphologicalSkeleton()
 {
     Mat img(10, 5, CV_8UC1, Scalar(255));
     line(img, Point(0, 1), Point(0, 4), Scalar(0));
@@ -231,11 +237,16 @@ void MorphologycalSkeleton()
     imshow("Original", img);
     imshow("Skeleton", skeleton);
     imshow("Restored", restored);
+
+
+    Mat result = Morphological::Skeleton(img, struct_elem);
     waitKey(0);
 }
 
 int main()
 {
-    MorphologycalSkeleton();
+    Basic();
+    //MorphologicalSkeleton();
+    waitKey(0);
     return 0;
 }

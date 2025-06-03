@@ -15,6 +15,9 @@ public:
 	static Mat closing(const Mat& img, const Mat& struct_elem);
 	static Mat HMT(const Mat& img, const Mat& struct_elem);
 	static Mat thinning(const Mat& img);
+	static Mat Skeleton(const Mat& img, const Mat& struct_elem);
+	static Mat BoundaryErosion(const Mat& img, const Mat& struct_elem);
+	static Mat MorphologicalGradient(const Mat& img, const Mat& struct_elem);
 private:
 };
 #endif // !_MORPHOLOGICAL_H_
