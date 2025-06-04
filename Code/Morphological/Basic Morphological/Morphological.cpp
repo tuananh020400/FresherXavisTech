@@ -181,8 +181,8 @@ void HMTcompare()
     Mat result3;
     Mat result4;
 
-    morphologyEx(image, result2, MORPH_HITMISS, struct_elem, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(0));
-    morphologyEx(image, result3, MORPH_HITMISS, struct_elem, cv::Point(-1, -1), 1, cv::BORDER_CONSTANT, cv::Scalar(255));
+    morphologyEx(image, result2, MORPH_HITMISS, struct_elem, Point(-1, -1), 1, BORDER_CONSTANT, Scalar(0));
+    morphologyEx(image, result3, MORPH_HITMISS, struct_elem, Point(-1, -1), 1, BORDER_CONSTANT, Scalar(255));
     morphologyEx(image, result4, MORPH_HITMISS, struct_elem);
     waitKey(0);
 }
@@ -245,7 +245,8 @@ void MorphologicalSkeleton()
 
 int main()
 {
-    Basic();
+    cout << "morphologyDefaultBorderValue = " << morphologyDefaultBorderValue() << endl;
+    //HMTcompare();
     //MorphologicalSkeleton();
     waitKey(0);
     return 0;
