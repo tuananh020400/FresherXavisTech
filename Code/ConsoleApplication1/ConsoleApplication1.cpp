@@ -87,17 +87,20 @@ Mat multiThreshold(Mat &image, int T1, int T2)
 }
 int main(void)
 {
-    Mat image = imread("D:/FresherXavisTech/Image/240129_A556_PANEL ID_43(14_38)_M 1(F 1_2).tif", IMREAD_GRAYSCALE);
+    Mat image = imread("D:/FresherXavisTech/Image/1 (2).png", IMREAD_GRAYSCALE);
     Mat blured;
     Mat adaptiveThresholdedMean;
     Mat adaptiveThresholdedGauss;
     Mat Otsu;
+    Mat Triangle;
+    Mat OpenCVOtsu;
     int threshVal = computeOtsuThreshold(image);
     bilateralFilter(image, blured, 9, 3.0, 10.0, BORDER_CONSTANT);
-    adaptiveThreshold(blured, adaptiveThresholdedMean, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 0.5);
-    adaptiveThreshold(blured, adaptiveThresholdedGauss, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 3, 0.5);
-    threshold(blured, Otsu, threshVal, 255, THRESH_BINARY);
-    
+    threshold(image, Triangle, 0, 355, THRESH_TRIANGLE);
+    adaptiveThreshold(blured, adaptiveThresholdedMean, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 9, 5);
+    adaptiveThreshold(blured, adaptiveThresholdedGauss, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 9, 5);
+    threshold(image, Otsu, threshVal, 127, THRESH_BINARY);
+    threshold(image, OpenCVOtsu, 0, 255, THRESH_OTSU);
     return 0;
 }
 
