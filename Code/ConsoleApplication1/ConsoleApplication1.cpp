@@ -1,22 +1,22 @@
-#include <opencv2/opencv.hpp>
+﻿#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <vector>
 
 using namespace std;
 using namespace cv;
 
-int computeOtsuThreshold(const Mat& gray)
+int computeOtsuThreshold(const Mat& image)
 {
     // Histogram
     vector<int> hist(256, 0);
-    for (int y = 0; y < gray.rows; y++) {
-        for (int x = 0; x < gray.cols; x++) {
-            int pixel = gray.at<uchar>(y, x);
+    for (int y = 0; y < image.rows; y++) {
+        for (int x = 0; x < image.cols; x++) {
+            int pixel = image.at<uchar>(y, x);
             hist[pixel]++;
         }
     }
 
-    int total = gray.rows * gray.cols;
+    int total = image.rows * image.cols;
 
     // p(i)
     vector<float> prob(256, 0.0f);
@@ -63,5 +63,41 @@ int computeOtsuThreshold(const Mat& gray)
         }
     }
     return bestThreshold;
+}
+
+Mat multiThreshold(Mat &image, int T1, int T2)
+{
+    Mat result = image.clone();
+    for (int y = 0; y < image.rows; ++y) {
+        for (int x = 0; x < image.cols; ++x) {
+            uchar pixel = image.at<uchar>(y, x);
+
+            if (pixel < T1) {
+                result.at<uchar>(y, x) = 0;       // Vùng tối
+            }
+            else if (pixel < T2) {
+                result.at<uchar>(y, x) = 127;     // Vùng trung bình
+            }
+            else {
+                result.at<uchar>(y, x) = 255;     // Vùng sáng
+            }
+        }
+    }
+    return result;
+}
+int main(void)
+{
+    Mat image = imread("D:/FresherXavisTech/Image/240129_A556_PANEL ID_43(14_38)_M 1(F 1_2).tif", IMREAD_GRAYSCALE);
+    Mat blured;
+    Mat adaptiveThresholdedMean;
+    Mat adaptiveThresholdedGauss;
+    Mat Otsu;
+    int threshVal = computeOtsuThreshold(image);
+    bilateralFilter(image, blured, 9, 3.0, 10.0, BORDER_CONSTANT);
+    adaptiveThreshold(blured, adaptiveThresholdedMean, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 3, 0.5);
+    adaptiveThreshold(blured, adaptiveThresholdedGauss, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 3, 0.5);
+    threshold(blured, Otsu, threshVal, 255, THRESH_BINARY);
+    
+    return 0;
 }
 
