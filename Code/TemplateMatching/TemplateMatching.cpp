@@ -138,7 +138,7 @@ int main() {
 	Mat result;
 	matchTemplate(image, templ, result, TM_CCOEFF_NORMED);
 
-	float threshold = 0.5f;
+	float threshold = 0.65f;
 	vector<Point> matches = findMatches(result, threshold);
 
 	int distanceThreshold = max(templ.rows, templ.cols);
