@@ -91,7 +91,14 @@ int main() {
 	Mat blurred;
 	GaussianBlur(image, blurred, Size(5, 5), 1.5);
 
-	vector<Vec3f> circles = houghCircle(blurred, 1.0, 20.0, 100.0, 30.0, 20, 100);
+	Ptr<CLAHE> clahe = createCLAHE();
+	clahe->setClipLimit(2.0);
+	clahe->setTilesGridSize(Size(9, 9));
+	Mat claheResult;
+	clahe->apply(blurred, claheResult);
+
+	vector<Vec3f> circles = houghCircle(claheResult, 1.0, 10.0, 100.0, 10.0, 1, 200);
+	//HoughCircles(claheResult, circles, HOUGH_GRADIENT, 1.0, 20.0, 100.0, 30, 20, 100);
 
 	Mat color_image = imread("D:/FresherXavisTech/Image/test.tif");
 	for (const auto& circleE : circles) {
