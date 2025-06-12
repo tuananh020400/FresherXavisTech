@@ -78,6 +78,17 @@ vector<Vec3f> houghCircle(const Mat& image, double dp, double minDist, double pa
 		}
 	}
 
+	Mat color_image;
+	cvtColor(edges, color_image, COLOR_GRAY2BGR);
+
+	for (const auto& circleE : filtered_circles) {
+		float x = circleE[0];
+		float y = circleE[1];
+		float r = circleE[2];
+		circle(color_image, Point(static_cast<int>(x), static_cast<int>(y)),
+			static_cast<int>(r), Scalar(0, 255, 0), 2);
+	}
+
 	return filtered_circles;
 }
 
@@ -89,7 +100,8 @@ int main() {
 	}
 
 	Mat blurred;
-	GaussianBlur(image, blurred, Size(5, 5), 1.5);
+	//GaussianBlur(image, blurred, Size(5, 5), 1.5);
+	bilateralFilter(image, blurred, -1, 4.0, 35);
 
 	Ptr<CLAHE> clahe = createCLAHE();
 	clahe->setClipLimit(2.0);
@@ -97,8 +109,10 @@ int main() {
 	Mat claheResult;
 	clahe->apply(blurred, claheResult);
 
-	vector<Vec3f> circles = houghCircle(claheResult, 1.0, 10.0, 100.0, 10.0, 1, 200);
-	//HoughCircles(claheResult, circles, HOUGH_GRADIENT, 1.0, 20.0, 100.0, 30, 20, 100);
+	bilateralFilter(claheResult, blurred, -1, 4.0, 35);
+
+	vector<Vec3f> circles = houghCircle(blurred, 1.0, 5, 100.0, 10, 1, 50);
+	//HoughCircles(claheResult, circles, HOUGH_GRADIENT, 1.0, 10.0, 100.0, 20, 125, 150);
 
 	Mat color_image = imread("D:/FresherXavisTech/Image/test.tif");
 	for (const auto& circleE : circles) {
