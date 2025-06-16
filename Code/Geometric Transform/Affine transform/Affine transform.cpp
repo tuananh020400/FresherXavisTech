@@ -79,6 +79,51 @@ Mat translate(const Mat& src, double tx, double ty) {
 	return dst;
 }
 
+Mat skewImage(const Mat& src, float shear, const std::string& direction) {
+	int width = src.cols;
+	int height = src.rows;
+
+	if (src.channels() != 1) {
+		cerr << "Chỉ hỗ trợ ảnh grayscale (1 kênh).\n";
+		return src.clone();
+	}
+
+	if (direction == "x") {
+		int new_width = static_cast<int>(width + std::abs(shear) * height);
+		Mat dst = Mat::zeros(height, new_width, src.type());
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int new_x = static_cast<int>(x + shear * y);
+				if (new_x >= 0 && new_x < dst.cols) {
+					dst.at<uchar>(y, new_x) = src.at<uchar>(y, x);
+				}
+			}
+		}
+
+		return dst;
+	}
+	else if (direction == "y") {
+		int new_height = static_cast<int>(height + std::abs(shear) * width);
+		Mat dst = Mat::zeros(new_height, width, src.type());
+
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				int new_y = static_cast<int>(y + shear * x);
+				if (new_y >= 0 && new_y < dst.rows) {
+					dst.at<uchar>(new_y, x) = src.at<uchar>(y, x);
+				}
+			}
+		}
+
+		return dst;
+	}
+	else {
+		cerr << "Chỉ hỗ trợ skew theo 'x' hoặc 'y'\n";
+		return src.clone();
+	}
+}
+
 int main() {
 	Mat src = imread("D:/FresherXavisTech/Image/images.jpg", IMREAD_GRAYSCALE);
 	if (src.empty()) {
@@ -86,6 +131,9 @@ int main() {
 		return -1;
 	}
 	imshow("Original Image", src);
+
+	Mat blured;
+	GaussianBlur(src, blured, Size(7, 7), 20.0, 20.0);
 
 	Mat zoomed = zoom(src, 2, 0.5);
 	imshow("Zoomed Image", zoomed);
@@ -95,6 +143,9 @@ int main() {
 	
 	Mat translated = translate(src, 50.0, 30.0);
 	imshow("Translated Image", translated);
+
+	Mat skewedX = skewImage(src, 0.3f, "x");
+	Mat skewedY = skewImage(src, 0.5f, "y");
 
 	waitKey(0);
 	return 0;
