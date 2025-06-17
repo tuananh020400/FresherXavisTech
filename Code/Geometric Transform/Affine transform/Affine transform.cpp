@@ -132,20 +132,20 @@ int main() {
 	}
 	imshow("Original Image", src);
 
-	Mat blured;
-	GaussianBlur(src, blured, Size(7, 7), 20.0, 20.0);
+	//Mat blured;
+	//GaussianBlur(src, blured, Size(7, 7), 20.0, 20.0);
 
 	Mat zoomed = zoom(src, 2, 0.5);
 	imshow("Zoomed Image", zoomed);
 
-	Mat rotated = rotate(src, 45.0);
+	Mat rotated = rotate(zoomed, 45.0);
 	imshow("Rotated Image", rotated);
 	
-	Mat translated = translate(src, 50.0, 30.0);
+	Mat translated = translate(rotated, 50.0, 30.0);
 	imshow("Translated Image", translated);
 
-	Mat skewedX = skewImage(src, 0.3f, "x");
-	Mat skewedY = skewImage(src, 0.5f, "y");
+	Mat skewedX = skewImage(translated, 0.3f, "x");
+	Mat skewedY = skewImage(skewedX, 0.5f, "y");
 
 	waitKey(0);
 	return 0;
