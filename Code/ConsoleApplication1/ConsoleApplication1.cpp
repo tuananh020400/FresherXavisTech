@@ -87,7 +87,7 @@ Mat multiThreshold(Mat &image, int T1, int T2)
 }
 int main(void)
 {
-    Mat image = imread("D:/FresherXavisTech/Image/1 (2).png", IMREAD_GRAYSCALE);
+    Mat image = imread("D:/FresherXavisTech/Image/00000.tif", IMREAD_GRAYSCALE);
     Mat blured;
     Mat adaptiveThresholdedMean;
     Mat adaptiveThresholdedGauss;
