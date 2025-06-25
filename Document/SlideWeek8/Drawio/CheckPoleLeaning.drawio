@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="27.1.6">
+  <diagram name="CheckPoleLeaning" id="Grv56xgz4B9fNR0ccENA">
+    <mxGraphModel dx="908" dy="482" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-1" value="Start" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="240" y="80" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-2" target="ExMUyP_u8X5j0I9mRRXf-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-2" value="Calculate borderWidth, poleROI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="190" y="140" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-3" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;html=1;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-1" target="ExMUyP_u8X5j0I9mRRXf-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-4" value="leaningThreshold &amp;lt; 255&lt;div&gt;AND poleROI not empty?&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="150" y="200" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-6" value="leftx = leftIdx + poleROI.x;&lt;div&gt;rightx = rightIdx + poleROI.x;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="460" y="200" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-7" value="No" style="edgeStyle=elbowEdgeStyle;endArrow=block;html=1;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-4" target="ExMUyP_u8X5j0I9mRRXf-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-8" value="isUseManualMethod" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="200" y="290" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-9" value="Yes" style="edgeStyle=elbowEdgeStyle;endArrow=block;html=1;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-4">
+          <mxGeometry x="-0.3345" relative="1" as="geometry">
+            <mxPoint x="280" y="290" as="targetPoint" />
+            <Array as="points" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-10" value="isCheckLeaning =\nCheckPoleLeaningManual(...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="60" y="360" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-11" value="Yes" style="edgeStyle=elbowEdgeStyle;endArrow=block;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-8" target="ExMUyP_u8X5j0I9mRRXf-10">
+          <mxGeometry x="0.0769" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="320" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-12" value="isCheckLeaning =\nCheckPoleLeaningAuto(...)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="300" y="360" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ExMUyP_u8X5j0I9mRRXf-13" value="No" style="edgeStyle=elbowEdgeStyle;endArrow=block;html=1;" edge="1" parent="1" source="ExMUyP_u8X5j0I9mRRXf-8" target="ExMUyP_u8X5j0I9mRRXf-12">
+          <mxGeometry x="0.0769" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="400" y="320" />
+              <mxPoint x="400" y="270" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
