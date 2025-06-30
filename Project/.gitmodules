@@ -1,8 +1,0 @@
-[submodule "lib/xvtCV"]
-	path = lib/xvtCV
-	url = http://192.168.1.254:8081/xavistech/xavistechlibary/xvtCV.git
-	branch = master
-[submodule "lib/CvPlot"]
-	path = lib/CvPlot
-	url = https://github.com/Profactor/cv-plot.git
-	branch = master
