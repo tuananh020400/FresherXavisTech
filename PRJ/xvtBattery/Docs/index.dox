@@ -1,0 +1,22 @@
+/** @mainpage Introduction
+* **xvtBattery** is **Xavis Tech** Battery library for battery inspection based on [xvtCV][OpenCV](https://opencv.org/)  
+* **xvtBattery Library's Contents**  
+*  1. @ref Building
+*  2. @ref Commenting
+*  3. [All Topics](topics.html)
+* . 
+* @defgroup Utils
+* @brief All related classes and common functions.
+*
+* @defgroup Cylinder 
+* @brief All related classes and functions handle inspect 2D image.
+*
+* @defgroup CT
+* @brief All related classes and functions handle inspect 3D image.
+*
+* @defgroup JR
+* @brief All related classes and functions handle inspect JR image.
+*
+* @defgroup Base
+* @brief All related classes and functions base for inspection all image types.
+*/

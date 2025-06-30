@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3.Pouch">
+      <UniqueIdentifier>{95250553-3013-40c5-b5e7-f88bd5b7b7f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4.CoinCell">
+      <UniqueIdentifier>{dc3bf012-b21d-44a8-b9e6-55afd01f973a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5.CT">
+      <UniqueIdentifier>{606dcaa9-bbc8-46fd-aeb2-beaf010fc32c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6.JR">
+      <UniqueIdentifier>{7fc83082-ba02-4a0e-962c-15b792714bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0.Utils">
+      <UniqueIdentifier>{8a66862f-a813-4e58-9e43-fb74b2c0918c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="1.Cylinder">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="7.Base">
+      <UniqueIdentifier>{bef1fc6b-075e-420e-9da4-96414dd7e7c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src/CylinderBatteryBase.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderBatteryLower.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderBatteryResult.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderBatteryUpper.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderBatteryUpperMeasurement.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/JRBatteryInspector.cpp">
+      <Filter>6.JR</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorAnode.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorCathode.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorJR.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorPole.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorBeading.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/BatteryInspectorBase.cpp">
+      <Filter>7.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src/PoleInfo.cpp">
+      <Filter>0.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BatteryUtils.cpp">
+      <Filter>0.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderUtils.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src/VersionInfo.cpp">
+      <Filter>0.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src/CylinderInspectorUpper.cpp">
+      <Filter>1.Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JRUtils.cpp">
+      <Filter>6.JR</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTBatteryInspectorUpper.cpp">
+      <Filter>5.CT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTBatteryInspectorLower.cpp">
+      <Filter>5.CT</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include/xvtBattery/CylinderBatteryBase.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/CylinderBatteryLower.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/CylinderBatteryResult.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/CylinderBatteryUpper.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/CylinderBatteryUpperMeasurement.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/JRBatteryInspector.h">
+      <Filter>6.JR</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorAnode.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorCathode.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorJR.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorPole.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorBeading.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorBase.h">
+      <Filter>7.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\VersionInfo.h">
+      <Filter>0.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/PoleInfo.h">
+      <Filter>0.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\CylinderUtils.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\BatteryUtils.h">
+      <Filter>0.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\BatteryUtils.inl.h">
+      <Filter>0.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include/xvtBattery/CylinderInspectorUpper.h">
+      <Filter>1.Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\JRUtils.h">
+      <Filter>6.JR</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\CTBatteryInspectorUpper.h">
+      <Filter>5.CT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xvtBattery\CTBatteryInspectorLower.h">
+      <Filter>5.CT</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

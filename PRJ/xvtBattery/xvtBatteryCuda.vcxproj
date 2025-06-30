@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleasePerf|Win32">
+      <Configuration>ReleasePerf</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleasePerf|x64">
+      <Configuration>ReleasePerf</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{b2b4efe3-754b-4f1f-b490-ef2fb817bea7}</ProjectGuid>
+    <RootNamespace>xvtBattery</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>xvtBatteryd</TargetName>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <IncludePath>D:\InstallEnv\ShareLib\OpenCV\4.8.0\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+    <TargetName>xvtBattery</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CVPLOT_HEADER_ONLY;WIN32;_DEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_470_CUDA121)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(OPENCV_470_CUDA121)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xvtCVd.lib;opencv_world430d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CVPLOT_HEADER_ONLY;WIN32;NDEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_470_CUDA121)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(OPENCV_470_CUDA121)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xvtCV.lib;opencv_world430.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CVPLOT_HEADER_ONLY;WIN32;NDEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_470_CUDA121)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(OPENCV_470_CUDA121)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xvtCV.lib;opencv_world430.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CVPLOT_HEADER_ONLY;_DEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_480)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>xvtCVd.lib;opencv_world480d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCV_480)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CVPLOT_HEADER_ONLY;NDEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_480)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>xvtCV.lib;opencv_world480.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCV_480)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleasePerf|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions> __PERFORMANCE_ANALYSIS__;NDEBUG;CVPLOT_HEADER_ONLY;NDEBUG;XVTBATTERY_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)..\lib\xvtCV\xvtcvLib\include;$(ProjectDir)..\lib\CvPlot\CvPlot\inc;$(OPENCV_480)\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>xvtCV.lib;opencv_world430.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OPENCV_480)\$(Platform);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>call "$(ProjectDir)..\lib\xvtCV\xvtcvLib\makeInstallFiles.bat" "$(SolutionDir)" "$(ProjectDir)" "$(IntermediateOutputPath)" "xvtBattery"
+git restore include\xvtBattery\VersionInfo.h</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PreBuildEvent>
+      <Command>powershell -ExecutionPolicy Bypass -File "$(ProjectDir)..\lib\xvtCV\xvtcvLib\Update-BuildVersion.ps1" -FilePath "$(ProjectDir)include\xvtBattery\VersionInfo.h"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src/BatteryInspectorAnode.cpp" />
+    <ClCompile Include="src/BatteryInspectorBase.cpp" />
+    <ClCompile Include="src/BatteryInspectorBeading.cpp" />
+    <ClCompile Include="src/BatteryInspectorCathode.cpp" />
+    <ClCompile Include="src/BatteryInspectorJR.cpp" />
+    <ClCompile Include="src/BatteryInspectorPole.cpp" />
+    <ClCompile Include="src\CylinderSetting.cpp" />
+    <ClCompile Include="src\CTBatteryInspectorBase.cpp" />
+    <ClCompile Include="src\CTBatteryInspectorLower.cpp" />
+    <ClCompile Include="src/CylinderBatteryUpperMeasurement.cpp" />
+    <ClCompile Include="src/CylinderInspectorUpper.cpp" />
+    <ClCompile Include="src/CylinderUtils.cpp" />
+    <ClCompile Include="src/CylinderBatteryBase.cpp" />
+    <ClCompile Include="src/CylinderBatteryLower.cpp" />
+    <ClCompile Include="src/CylinderBatteryResult.cpp" />
+    <ClCompile Include="src/CylinderBatteryUpper.cpp" />
+    <ClCompile Include="src/JRBatteryInspector.cpp" />
+    <ClCompile Include="src/PoleInfo.cpp" />
+    <ClCompile Include="src/VersionInfo.cpp" />
+    <ClCompile Include="src\BatteryUtils.cpp" />
+    <ClCompile Include="src\CTBatteryInspectorUpper.cpp" />
+    <ClCompile Include="src\JRUtils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include/xvtBattery/BatteryInspectorAnode.h" />
+    <ClInclude Include="include/xvtBattery/BatteryInspectorBase.h" />
+    <ClInclude Include="include/xvtBattery/BatteryInspectorBeading.h" />
+    <ClInclude Include="include/xvtBattery/BatteryInspectorCathode.h" />
+    <ClInclude Include="include/xvtBattery/BatteryInspectorJR.h" />
+    <ClInclude Include="include/xvtBattery/BatteryInspectorPole.h" />
+    <ClInclude Include="include/xvtBattery/CylinderBatteryUpperMeasurement.h" />
+    <ClInclude Include="include/xvtBattery/CylinderInspectorUpper.h" />
+    <ClInclude Include="include\xvtBattery\CylinderSetting.h" />
+    <ClInclude Include="include\xvtBattery\BatteryUtils.h" />
+    <ClInclude Include="include\xvtBattery\BatteryUtils.inl.h" />
+    <ClInclude Include="include\xvtBattery\CTBatteryInspectorBase.h" />
+    <ClInclude Include="include\xvtBattery\CTBatteryInspectorLower.h" />
+    <ClInclude Include="include\xvtBattery\CTBatteryInspectorUpper.h" />
+    <ClInclude Include="include\xvtBattery\CylinderSettingDefine.h" />
+    <ClInclude Include="include\xvtBattery\CylinderUtils.h" />
+    <ClInclude Include="include/xvtBattery/CylinderBatteryBase.h" />
+    <ClInclude Include="include/xvtBattery/CylinderBatteryLower.h" />
+    <ClInclude Include="include/xvtBattery/CylinderBatteryResult.h" />
+    <ClInclude Include="include/xvtBattery/CylinderBatteryUpper.h" />
+    <ClInclude Include="include/xvtBattery/JRBatteryInspector.h" />
+    <ClInclude Include="include/xvtBattery/PoleInfo.h" />
+    <ClInclude Include="include\xvtBattery\JRUtils.h" />
+    <ClInclude Include="include\xvtBattery\VersionInfo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\xvtCV\xvtcvLib\xvtCV.vcxproj">
+      <Project>{caac539d-3eb6-4bc2-9ae6-d87dfa0e4b98}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\Building.md" />
+    <None Include="Docs\CommentingAndDocGenereate.md" />
+    <None Include="Docs\index.dox" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
